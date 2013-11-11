@@ -1,5 +1,9 @@
 package org.royaldev.royalbot.configuration;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Map;
 import org.apache.commons.lang3.Validate;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -7,11 +11,6 @@ import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.representer.Representer;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * An implementation of {@link Configuration} which saves all files in Yaml.
@@ -29,7 +28,9 @@ public class YamlConfiguration extends FileConfiguration {
         yamlOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         yamlRepresenter.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         String dump = yaml.dump(getValues(false));
-        if (dump.equals(BLANK_CONFIG)) dump = "";
+        if (dump.equals(BLANK_CONFIG)) {
+            dump = "";
+        }
         return  dump;
     }
 
@@ -44,15 +45,21 @@ public class YamlConfiguration extends FileConfiguration {
         } catch (ClassCastException e) {
             throw new IOException("Top level is not a Map.");
         }
-        if (input != null) convertMapsToSections(input, this);
+        if (input != null) {
+            convertMapsToSections(input, this);
+        }
     }
 
+    @Override
     protected void convertMapsToSections(Map<?, ?> input, ConfigurationSection section) {
         for (Map.Entry<?, ?> entry : input.entrySet()) {
             String key = entry.getKey().toString();
             Object value = entry.getValue();
-            if (value instanceof Map) convertMapsToSections((Map<?, ?>) value, section.createSection(key));
-            else section.set(key, value);
+            if (value instanceof Map) {
+                convertMapsToSections((Map<?, ?>) value, section.createSection(key));
+            } else {
+                section.set(key, value);
+            }
         }
     }
 

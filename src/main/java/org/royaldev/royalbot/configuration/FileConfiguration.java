@@ -2,10 +2,6 @@ package org.royaldev.royalbot.configuration;
 
 
 import com.google.common.io.Files;
-import org.apache.commons.lang3.Validate;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.error.YAMLException;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import org.apache.commons.lang3.Validate;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 /**
  * This is a base class for all File based implementations of {@link Configuration}
@@ -111,7 +110,9 @@ public abstract class FileConfiguration extends MemoryConfiguration {
         } catch (ClassCastException e) {
             throw new IOException("Top level is not a Map.");
         }
-        if (input != null) convertMapsToSections(input, this);
+        if (input != null) {
+            convertMapsToSections(input, this);
+        }
     }
 
     protected void convertMapsToSections(Map<?, ?> input, ConfigurationSection section) {

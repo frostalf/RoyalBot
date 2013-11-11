@@ -1,5 +1,6 @@
 package org.royaldev.royalbot;
 
+import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -14,8 +15,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.royaldev.royalbot.auth.Auth;
 import org.royaldev.royalbot.commands.IRCCommand;
 
-import java.util.List;
-
 public class BaseListeners extends ListenerAdapter<PircBotX> {
 
     private final RoyalBot rb;
@@ -24,54 +23,81 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
         rb = instance;
     }
 
+    @Override
     public void onConnect(ConnectEvent e) {
         rb.getLogger().info("Connected!");
     }
 
+    @Override
     public void onInvite(InviteEvent e) {
         e.getBot().sendIRC().joinChannel(e.getChannel());
         rb.getLogger().info("Invited to " + e.getChannel() + " by " + e.getUser() + " .");
     }
 
+    @Override
     public void onJoin(JoinEvent e) {
-        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) return;
+        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) {
+            return;
+        }
         List<String> channels = rb.getConfig().getChannels();
-        if (channels.contains(e.getChannel().getName())) return;
+        if (channels.contains(e.getChannel().getName())) {
+            return;
+        }
         channels.add(e.getChannel().getName());
         rb.getConfig().setChannels(channels);
         rb.getLogger().info("Joined " + e.getChannel().getName() + ".");
     }
 
+    @Override
     public void onPart(PartEvent e) {
-        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) return;
+        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) {
+            return;
+        }
         List<String> channels = rb.getConfig().getChannels();
-        if (channels.contains(e.getChannel().getName())) channels.remove(e.getChannel().getName());
+        if (channels.contains(e.getChannel().getName())) {
+            channels.remove(e.getChannel().getName());
+        }
         rb.getConfig().setChannels(channels);
         rb.getLogger().info("Parted from " + e.getChannel().getName() + ".");
     }
 
+    @Override
     public void onKick(KickEvent e) {
-        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) return;
+        if (!e.getUser().getNick().equals(rb.getBot().getUserBot().getNick())) {
+            return;
+        }
         List<String> channels = rb.getConfig().getChannels();
-        if (channels.contains(e.getChannel().getName())) channels.remove(e.getChannel().getName());
+        if (channels.contains(e.getChannel().getName())) {
+            channels.remove(e.getChannel().getName());
+        }
         rb.getConfig().setChannels(channels);
         rb.getLogger().info("Kicked from " + e.getChannel().getName() + ".");
     }
 
+    @Override
     public void onGenericMessage(GenericMessageEvent e) {
-        if (!(e instanceof MessageEvent) && !(e instanceof PrivateMessageEvent)) return;
+        if (!(e instanceof MessageEvent) && !(e instanceof PrivateMessageEvent)) {
+            return;
+        }
         final boolean isPrivateMessage = e instanceof PrivateMessageEvent;
-        if (e.getMessage().isEmpty()) return;
-        if (e.getMessage().charAt(0) != rb.getCommandPrefix() && !isPrivateMessage) return;
+        if (e.getMessage().isEmpty()) {
+            return;
+        }
+        if (e.getMessage().charAt(0) != rb.getCommandPrefix() && !isPrivateMessage) {
+            return;
+        }
         final String[] split = e.getMessage().trim().split(" ");
         final String commandString = (!isPrivateMessage) ? split[0].substring(1, split[0].length()) : split[0];
         final IRCCommand command = rb.getCommandHandler().getCommand(commandString);
-        if (command == null) return;
+        if (command == null) {
+            return;
+        }
         final IRCCommand.CommandType commandType = command.getCommandType();
-        if (!isPrivateMessage && commandType != IRCCommand.CommandType.MESSAGE && commandType != IRCCommand.CommandType.BOTH)
+        if (!isPrivateMessage && commandType != IRCCommand.CommandType.MESSAGE && commandType != IRCCommand.CommandType.BOTH) {
             return;
-        else if (isPrivateMessage && commandType != IRCCommand.CommandType.PRIVATE && commandType != IRCCommand.CommandType.BOTH)
+        } else if (isPrivateMessage && commandType != IRCCommand.CommandType.PRIVATE && commandType != IRCCommand.CommandType.BOTH) {
             return;
+        }
         final IRCCommand.AuthLevel authLevel = command.getAuthLevel();
         if (authLevel == IRCCommand.AuthLevel.ADMIN && !Auth.checkAuth(e.getUser()).isAuthed()) {
             e.respond("You are not an admin!");

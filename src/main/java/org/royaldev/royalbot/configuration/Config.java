@@ -1,13 +1,12 @@
 package org.royaldev.royalbot.configuration;
 
-import org.royaldev.royalbot.RoyalBot;
-
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.royaldev.royalbot.RoyalBot;
 
 public class Config {
 
@@ -20,8 +19,11 @@ public class Config {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (configFile == null) yc = new YamlConfiguration();
-        else yc = YamlConfiguration.loadConfiguration(configFile);
+        if (configFile == null) {
+            yc = new YamlConfiguration();
+        } else {
+            yc = YamlConfiguration.loadConfiguration(configFile);
+        }
     }
 
     private void save() {
@@ -38,15 +40,19 @@ public class Config {
      * @return Map
      */
     public Set<String> getAdmins() {
-        final Set<String> admins = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        final Set<String> admins = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
         admins.addAll(yc.getStringList("admins"));
-        if (!getSuperAdmin().isEmpty()) admins.add(getSuperAdmin());
+        if (!getSuperAdmin().isEmpty()) {
+            admins.add(getSuperAdmin());
+        }
         return admins;
     }
 
     public void setAdmins(Set<String> admins) {
-        final List<String> newAdmins = new ArrayList<String>(admins);
-        if (!getSuperAdmin().isEmpty() && newAdmins.contains(getSuperAdmin())) newAdmins.remove(getSuperAdmin());
+        final List<String> newAdmins = new ArrayList<>(admins);
+        if (!getSuperAdmin().isEmpty() && newAdmins.contains(getSuperAdmin())) {
+            newAdmins.remove(getSuperAdmin());
+        }
         yc.set("admins", newAdmins);
         save();
     }

@@ -1,27 +1,30 @@
 package org.royaldev.royalbot.commands;
 
-import org.pircbotx.hooks.types.GenericMessageEvent;
-import org.royaldev.royalbot.BotUtils;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import org.pircbotx.hooks.types.GenericMessageEvent;
+import org.royaldev.royalbot.BotUtils;
 
 public class MCPingCommand implements IRCCommand {
+    @Override
     public String getName() {
         return "mcping";
     }
 
+    @Override
     public String getUsage() {
         return "<command> [server] (port)";
     }
 
+    @Override
     public String getDescription() {
         return "Pings a Minecraft server and returns its info.";
     }
 
+    @Override
     public void onCommand(GenericMessageEvent event, String[] args) {
         if (args.length < 1) {
             event.respond("Not enough arguments.");
@@ -35,7 +38,9 @@ public class MCPingCommand implements IRCCommand {
                 event.respond(BotUtils.formatException(e));
                 return;
             }
-        } else port = 25565;
+        } else {
+            port = 25565;
+        }
         MinecraftPingReply mpr;
         try {
             mpr = new MinecraftPing().getPing(args[0], port);
@@ -46,10 +51,12 @@ public class MCPingCommand implements IRCCommand {
         event.respond(mpr.getMotd() + " (" + mpr.getOnlinePlayers() + "/" + mpr.getMaxPlayers() + ", " + mpr.getVersion() + ")");
     }
 
+    @Override
     public CommandType getCommandType() {
         return CommandType.BOTH;
     }
 
+    @Override
     public AuthLevel getAuthLevel() {
         return AuthLevel.PUBLIC;
     }
@@ -93,13 +100,19 @@ public class MCPingCommand implements IRCCommand {
             out.writeChars(hostname);
             out.writeInt(port);
             out.flush();
-            if (in.read() != 255) throw new IOException("Bad message: An incorrect packet was received.");
+            if (in.read() != 255) {
+                throw new IOException("Bad message: An incorrect packet was received.");
+            }
             final short bit = in.readShort();
             final StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bit; ++i) sb.append(in.readChar());
+            for (int i = 0; i < bit; ++i) {
+                sb.append(in.readChar());
+            }
             out.close();
             final String[] bits = sb.toString().split("\0");
-            if (bits.length != 6) return this.getPing(sb.toString(), hostname, port);
+            if (bits.length != 6) {
+                return this.getPing(sb.toString(), hostname, port);
+            }
             return new MinecraftPingReply(hostname, port, bits[3], bits[1], bits[2], Integer.valueOf(bits[4]), Integer.valueOf(bits[5]));
         }
 
@@ -121,13 +134,16 @@ public class MCPingCommand implements IRCCommand {
             this.validate(hostname, "Hostname cannot be null.");
             this.validate(port, "Port cannot be null.");
             final String[] bits = response.split("\u00a7");
-            if (bits.length != 3)
+            if (bits.length != 3) {
                 throw new IOException("Bad message: Failed to parse pre-12w42b ping message, check to see if it's correct?");
+            }
             return new MinecraftPingReply(hostname, port, bits[0], Integer.valueOf(bits[2]), Integer.valueOf(bits[1]));
         }
 
         private void validate(final Object o, final String m) {
-            if (o == null) throw new RuntimeException(m);
+            if (o == null) {
+                throw new RuntimeException(m);
+            }
         }
     }
 

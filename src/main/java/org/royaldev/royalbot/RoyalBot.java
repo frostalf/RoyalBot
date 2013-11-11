@@ -1,5 +1,15 @@
 package org.royaldev.royalbot;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLDecoder;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.kohsuke.args4j.CmdLineException;
@@ -19,17 +29,6 @@ import org.royaldev.royalbot.commands.PingCommand;
 import org.royaldev.royalbot.commands.QuitCommand;
 import org.royaldev.royalbot.configuration.Config;
 import org.royaldev.royalbot.listeners.YouTubeListener;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 public class RoyalBot {
 
@@ -99,7 +98,7 @@ public class RoyalBot {
             System.exit(1);
         }
         addCommands();
-        final Configuration.Builder<PircBotX> cb = new Configuration.Builder<PircBotX>();
+        final Configuration.Builder<PircBotX> cb = new Configuration.Builder<>();
         cb.setServer(serverHostname, serverPort)
                 .setName(botNick)
                 .setRealName(botRealname)
@@ -109,14 +108,23 @@ public class RoyalBot {
                 .addListener(new BaseListeners(this))
                 .setMessageDelay(messageDelay)
                 .setAutoNickChange(true);
-        for (String channel : channels) cb.addAutoJoinChannel(channel);
-        for (String channel : c.getChannels()) cb.addAutoJoinChannel(channel);
-        if (!serverPassword.isEmpty()) cb.setServerPassword(serverPassword);
-        if (!nickServPassword.isEmpty()) cb.setNickservPassword(nickServPassword);
+        for (String channel : channels) {
+            cb.addAutoJoinChannel(channel);
+        }
+        for (String channel : c.getChannels()) {
+            cb.addAutoJoinChannel(channel);
+        }
+        if (!serverPassword.isEmpty()) {
+            cb.setServerPassword(serverPassword);
+        }
+        if (!nickServPassword.isEmpty()) {
+            cb.setNickservPassword(nickServPassword);
+        }
         addListeners(cb);
         bot = new PircBotX(cb.buildConfiguration());
         getLogger().info("Connecting.");
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     bot.startBot();
@@ -136,10 +144,14 @@ public class RoyalBot {
             ex.printStackTrace();
             return;
         }
-        if (f.exists()) return;
+        if (f.exists()) {
+            return;
+        }
         getLogger().info("Saving default config.");
         try {
-            if (!f.createNewFile()) return;
+            if (!f.createNewFile()) {
+                return;
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -149,7 +161,9 @@ public class RoyalBot {
             OutputStream os = new FileOutputStream(f);
             try {
                 int read;
-                while ((read = file.read()) != -1) os.write(read);
+                while ((read = file.read()) != -1) {
+                    os.write(read);
+                }
                 os.flush();
             } finally {
                 os.close();

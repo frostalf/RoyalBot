@@ -1,9 +1,8 @@
 package org.royaldev.royalbot.configuration;
 
 
-import org.apache.commons.lang3.Validate;
-
 import java.util.Map;
+import org.apache.commons.lang3.Validate;
 
 /**
  * This is a {@link Configuration} implementation that does not save or load
@@ -22,15 +21,21 @@ public class MemoryConfiguration extends MemorySection implements Configuration 
     @Override
     public void addDefault(String path, Object value) {
         Validate.notNull(path, "Path may not be null");
-        if (defaults == null) defaults = new MemoryConfiguration();
+        if (defaults == null) {
+            defaults = new MemoryConfiguration();
+        }
         defaults.set(path, value);
     }
 
+    @Override
     public void addDefaults(Map<String, Object> defaults) {
         Validate.notNull(defaults, "Defaults may not be null");
-        for (Map.Entry<String, Object> entry : defaults.entrySet()) addDefault(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Object> entry : defaults.entrySet()) {
+            addDefault(entry.getKey(), entry.getValue());
+        }
     }
 
+    @Override
     public Configuration getDefaults() {
         return defaults;
     }

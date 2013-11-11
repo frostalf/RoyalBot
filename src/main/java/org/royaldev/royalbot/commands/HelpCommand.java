@@ -11,14 +11,17 @@ public class HelpCommand implements IRCCommand {
 
     final RoyalBot rb = RoyalBot.getInstance();
 
+    @Override
     public String getName() {
         return "help";
     }
 
+    @Override
     public String getUsage() {
         return "<command> (command)";
     }
 
+    @Override
     public String getDescription() {
         return "Displays all commands!";
     }
@@ -27,6 +30,7 @@ public class HelpCommand implements IRCCommand {
         return ic.getName() + " / Description: " + ic.getDescription() + " / Usage: " + ic.getUsage().replaceAll("(?i)<command>", ic.getName()) + " / Type: " + ic.getCommandType().getDescription();
     }
 
+    @Override
     public void onCommand(GenericMessageEvent event, String[] args) {
         final CommandHandler ch = rb.getCommandHandler();
         final User u = event.getUser();
@@ -35,8 +39,12 @@ public class HelpCommand implements IRCCommand {
         u.send().message("Channel command prefix: \"" + rb.getCommandPrefix() + "\"");
         if (args.length < 1) {
             for (IRCCommand ic : ch.getAllCommands()) {
-                if (ic.getAuthLevel() == AuthLevel.ADMIN && !userIsAdmin) continue;
-                if (ic.getAuthLevel() == AuthLevel.SUPERADMIN && !isSuperAdmin) continue;
+                if (ic.getAuthLevel() == AuthLevel.ADMIN && !userIsAdmin) {
+                    continue;
+                }
+                if (ic.getAuthLevel() == AuthLevel.SUPERADMIN && !isSuperAdmin) {
+                    continue;
+                }
                 u.send().message(getHelpString(ic));
             }
         } else {
@@ -49,10 +57,12 @@ public class HelpCommand implements IRCCommand {
         }
     }
 
+    @Override
     public CommandType getCommandType() {
         return CommandType.BOTH;
     }
 
+    @Override
     public AuthLevel getAuthLevel() {
         return AuthLevel.PUBLIC;
     }

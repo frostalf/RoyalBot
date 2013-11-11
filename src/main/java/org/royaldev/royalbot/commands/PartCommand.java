@@ -6,18 +6,22 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 public class PartCommand implements IRCCommand {
+    @Override
     public String getName() {
         return "part";
     }
 
+    @Override
     public String getUsage() {
         return "part [channel] (reason)";
     }
 
+    @Override
     public String getDescription() {
         return "Makes the bot part a channel";
     }
 
+    @Override
     public void onCommand(GenericMessageEvent event, String[] args) {
         if (args.length < 1) {
             event.respond("Not enough arguments.");
@@ -34,15 +38,20 @@ public class PartCommand implements IRCCommand {
             event.respond("Not in that channel!");
             return;
         }
-        if (args.length > 1) c.send().part(StringUtils.join(args, 1, args.length));
-        else c.send().part();
+        if (args.length > 1) {
+            c.send().part(StringUtils.join(args, 1, args.length));
+        } else {
+            c.send().part();
+        }
         event.respond("Parted from " + channel + ".");
     }
 
+    @Override
     public CommandType getCommandType() {
         return CommandType.PRIVATE;
     }
 
+    @Override
     public AuthLevel getAuthLevel() {
         return AuthLevel.ADMIN;
     }
