@@ -1,5 +1,9 @@
 package org.royaldev.royalbot;
 
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -11,11 +15,6 @@ import org.pircbotx.PircBotX;
 import org.royaldev.royalbot.commands.HelpCommand;
 import org.royaldev.royalbot.commands.PingCommand;
 import org.royaldev.royalbot.commands.QuitCommand;
-
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Formatter;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 public class RoyalBot {
 
@@ -78,7 +77,7 @@ public class RoyalBot {
         getLogger().setUseParentHandlers(false);
         getLogger().addHandler(ch);
         addCommands();
-        final Configuration.Builder<PircBotX> cb = new Configuration.Builder<PircBotX>();
+        final Configuration.Builder<PircBotX> cb = new Configuration.Builder<>();
         cb.setServer(serverHostname, serverPort)
                 .setName(botNick)
                 .setRealName(botRealname)
@@ -88,11 +87,18 @@ public class RoyalBot {
                 .addListener(new BaseListeners(this))
                 .setMessageDelay(messageDelay)
                 .setAutoNickChange(true);
-        for (String channel : channels) cb.addAutoJoinChannel(channel);
-        if (!serverPassword.isEmpty()) cb.setServerPassword(serverPassword);
-        if (!nickServPassword.isEmpty()) cb.setNickservPassword(nickServPassword);
+        for (String channel : channels) {
+            cb.addAutoJoinChannel(channel);
+        }
+        if (!serverPassword.isEmpty()) {
+            cb.setServerPassword(serverPassword);
+        }
+        if (!nickServPassword.isEmpty()) {
+            cb.setNickservPassword(nickServPassword);
+        }
         bot = new PircBotX(cb.buildConfiguration());
         new Thread(new Runnable() {
+            @Override
             public void run() {
                 try {
                     bot.startBot();

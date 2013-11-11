@@ -19,28 +19,40 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
         rb = instance;
     }
 
+    @Override
     public void onConnect(ConnectEvent e) {
         rb.getLogger().info("Connected!");
     }
 
+    @Override
     public void onInvite(InviteEvent e) {
         e.getBot().sendIRC().joinChannel(e.getChannel());
     }
 
+    @Override
     public void onGenericMessage(GenericMessageEvent e) {
-        if (!(e instanceof MessageEvent) && !(e instanceof PrivateMessageEvent)) return;
+        if (!(e instanceof MessageEvent) && !(e instanceof PrivateMessageEvent)) {
+            return;
+        }
         final boolean isPrivateMessage = e instanceof PrivateMessageEvent;
-        if (e.getMessage().isEmpty()) return;
-        if (e.getMessage().charAt(0) != rb.getCommandPrefix() && !isPrivateMessage) return;
+        if (e.getMessage().isEmpty()) {
+            return;
+        }
+        if (e.getMessage().charAt(0) != rb.getCommandPrefix() && !isPrivateMessage) {
+            return;
+        }
         final String[] split = e.getMessage().split(" ");
         final String commandString = (!isPrivateMessage) ? split[0].substring(1, split[0].length()) : split[0];
         final IRCCommand command = rb.getCommandHandler().getCommand(commandString);
-        if (command == null) return;
+        if (command == null) {
+            return;
+        }
         final IRCCommand.CommandType commandType = command.getCommandType();
-        if (!isPrivateMessage && commandType != IRCCommand.CommandType.MESSAGE && commandType != IRCCommand.CommandType.BOTH)
+        if (!isPrivateMessage && commandType != IRCCommand.CommandType.MESSAGE && commandType != IRCCommand.CommandType.BOTH) {
             return;
-        else if (isPrivateMessage && commandType != IRCCommand.CommandType.PRIVATE && commandType != IRCCommand.CommandType.BOTH)
+        } else if (isPrivateMessage && commandType != IRCCommand.CommandType.PRIVATE && commandType != IRCCommand.CommandType.BOTH) {
             return;
+        }
         final IRCCommand.AuthLevel authLevel = command.getAuthLevel();
         if (authLevel == IRCCommand.AuthLevel.ADMIN && !Auth.checkAuth(e.getUser()).isAuthed()) {
             e.respond("You are not an admin!");
