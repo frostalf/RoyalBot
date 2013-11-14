@@ -5,20 +5,6 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.royaldev.royalbot.RoyalBot;
 
 public class AdminCommand implements IRCCommand {
-    @Override
-    public String getName() {
-        return "admin";
-    }
-
-    @Override
-    public String getUsage() {
-        return "admin [add/remove] (name)";
-    }
-
-    @Override
-    public String getDescription() {
-        return "Manipulates the admin list.";
-    }
 
     private final RoyalBot rb = RoyalBot.getInstance();
 
@@ -51,6 +37,26 @@ public class AdminCommand implements IRCCommand {
         } else {
             event.respond("Invalid subcommand.");
         }
+    }
+
+    @Override
+    public String getName() {
+        return "admin";
+    }
+
+    @Override
+    public String getUsage() {
+        return "admin [add/remove] (name)";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Manipulates the admin list.";
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"admins"};
     }
 
     @Override

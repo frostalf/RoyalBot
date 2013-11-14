@@ -2,35 +2,31 @@ package org.royaldev.royalbot.commands;
 
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
-public class PingCommand implements IRCCommand {
+public class RepositoryCommand implements IRCCommand {
 
     @Override
     public void onCommand(GenericMessageEvent event, String[] args) {
-        if (args.length > 0 && args[0].equalsIgnoreCase("me")) {
-            event.respond("Hello there, " + event.getUser().getNick() + "!");
-        } else {
-            event.respond("Pong!");
-        }
+        event.respond("Contribute to " + event.getBot().getNick() + "! https://github.com/RoyalDev/RoyalBot");
     }
 
     @Override
     public String getName() {
-        return "ping";
+        return "repository";
     }
 
     @Override
     public String getUsage() {
-        return "<command> (\"me\")";
+        return "<command>";
     }
 
     @Override
     public String getDescription() {
-        return "Pings the bot! :D";
+        return "Returns the repository for this bot.";
     }
 
     @Override
     public String[] getAliases() {
-        return new String[0];
+        return new String[]{"repo"};
     }
 
     @Override

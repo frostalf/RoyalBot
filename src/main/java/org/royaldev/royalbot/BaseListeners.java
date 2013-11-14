@@ -31,7 +31,7 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
     @Override
     public void onInvite(InviteEvent e) {
         e.getBot().sendIRC().joinChannel(e.getChannel());
-        rb.getLogger().info("Invited to " + e.getChannel() + " by " + e.getUser() + " .");
+        rb.getLogger().info("Invited to " + e.getChannel() + " by " + e.getUser() + ".");
     }
 
     @Override
@@ -90,6 +90,7 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
         final String commandString = (!isPrivateMessage) ? split[0].substring(1, split[0].length()) : split[0];
         final IRCCommand command = rb.getCommandHandler().getCommand(commandString);
         if (command == null) {
+            if (isPrivateMessage) e.respond("No such command.");
             return;
         }
         final IRCCommand.CommandType commandType = command.getCommandType();
@@ -107,11 +108,24 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
             e.respond("You are not a superadmin!");
             return;
         }
+        rb.getLogger().info(((isPrivateMessage) ? "" : ((MessageEvent) e).getChannel().getName() + "/") + e.getUser().getNick() + ": " + e.getMessage());
         try {
-            rb.getLogger().info(((isPrivateMessage) ? "" : ((MessageEvent) e).getChannel().getName() + "/") + e.getUser().getNick() + ": " + e.getMessage());
             command.onCommand(e, ArrayUtils.subarray(split, 1, split.length));
         } catch (Exception ex) {
-            e.respond(BotUtils.formatException(ex));
+            final StringBuilder sb = new StringBuilder("Unhandled command exception! ");
+            sb.append(ex.getClass().getSimpleName()).append(": ").append(ex.getMessage());
+            if (rb.getConfig().getPastebinEnabled()) {
+                final String pastebin = BotUtils.pastebin(BotUtils.getStackTrace(ex));
+                if (pastebin != null) {
+                    String url = null;
+                    try {
+                        url = BotUtils.shortenURL(pastebin);
+                    } catch (Exception ignored) {
+                    }
+                    if (url != null) sb.append(" (").append(url).append(")");
+                }
+            } else ex.printStackTrace();
+            e.respond(sb.toString());
         }
     }
 

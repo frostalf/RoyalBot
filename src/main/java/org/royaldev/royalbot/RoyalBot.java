@@ -27,6 +27,10 @@ import org.royaldev.royalbot.commands.MCPingCommand;
 import org.royaldev.royalbot.commands.PartCommand;
 import org.royaldev.royalbot.commands.PingCommand;
 import org.royaldev.royalbot.commands.QuitCommand;
+import org.royaldev.royalbot.commands.RepositoryCommand;
+import org.royaldev.royalbot.commands.ShakespeareInsultCommand;
+import org.royaldev.royalbot.commands.ShortenCommand;
+import org.royaldev.royalbot.commands.WolframAlphaCommand;
 import org.royaldev.royalbot.configuration.Config;
 import org.royaldev.royalbot.listeners.YouTubeListener;
 
@@ -52,8 +56,8 @@ public class RoyalBot {
     private String botFinger = "RoyalDev's IRC Management Bot";
     @Option(name = "-l", usage = "Define the bot's login to the server", aliases = {"--login"})
     private String botLogin = "RoyalBot";
-    @Option(name = "-s", usage = "Set the server to connect to", aliases = {"--server"})
-    private String serverHostname = "irc.esper.net";
+    @Option(name = "-s", usage = "Set the server to connect to", aliases = {"--server"}, required = true)
+    private String serverHostname;
     @Option(name = "-P", usage = "Set the password of the server", aliases = {"--server-password"})
     private String serverPassword = "";
     @Option(name = "-A", usage = "Set the NickServ password to use", aliases = {"--nickserv-password"})
@@ -184,6 +188,10 @@ public class RoyalBot {
         ch.registerCommand(new AdminCommand());
         ch.registerCommand(new JoinCommand());
         ch.registerCommand(new PartCommand());
+        ch.registerCommand(new WolframAlphaCommand());
+        ch.registerCommand(new ShortenCommand());
+        ch.registerCommand(new RepositoryCommand());
+        ch.registerCommand(new ShakespeareInsultCommand());
     }
 
     private void addListeners(Configuration.Builder<PircBotX> cb) {
