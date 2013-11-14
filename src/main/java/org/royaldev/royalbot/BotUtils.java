@@ -1,13 +1,5 @@
 package org.royaldev.royalbot;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -17,6 +9,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
 public class BotUtils {
 
@@ -33,7 +32,9 @@ public class BotUtils {
     public static String getStackTrace(Exception e) {
         final StringBuilder sb = new StringBuilder(e.getClass().getName());
         sb.append(": ").append(e.getMessage());
-        for (StackTraceElement ste : e.getStackTrace()) sb.append("\n").append("  at ").append(ste.toString());
+        for (StackTraceElement ste : e.getStackTrace()) {
+            sb.append("\n").append("  at ").append(ste.toString());
+        }
         return sb.toString();
     }
 
@@ -58,7 +59,9 @@ public class BotUtils {
             return null;
         }
         HttpEntity he = hr.getEntity();
-        if (he == null) return null;
+        if (he == null) {
+            return null;
+        }
         try {
             final BufferedReader br = new BufferedReader(new InputStreamReader(he.getContent()));
             try {
@@ -84,7 +87,9 @@ public class BotUtils {
      */
     public static String linkToStackTrace(Exception ex) {
         final RoyalBot rb = RoyalBot.getInstance();
-        if (!rb.getConfig().getPastebinEnabled()) return null;
+        if (!rb.getConfig().getPastebinEnabled()) {
+            return null;
+        }
         final String pastebin = BotUtils.pastebin(BotUtils.getStackTrace(ex));
         if (pastebin != null) {
             String url = null;
@@ -92,7 +97,9 @@ public class BotUtils {
                 url = BotUtils.shortenURL(pastebin);
             } catch (Exception ignored) {
             }
-            if (url != null) return url;
+            if (url != null) {
+                return url;
+            }
         }
         return null;
     }
@@ -109,7 +116,9 @@ public class BotUtils {
         final BufferedReader br = new BufferedReader(new InputStreamReader(u.openConnection().getInputStream()));
         final StringBuilder sb = new StringBuilder();
         String line;
-        while ((line = br.readLine()) != null) sb.append(line).append("\n");
+        while ((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
         return sb.toString();
     }
 

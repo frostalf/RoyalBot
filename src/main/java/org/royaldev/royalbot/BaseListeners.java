@@ -90,7 +90,9 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
         final String commandString = (!isPrivateMessage) ? split[0].substring(1, split[0].length()) : split[0];
         final IRCCommand command = rb.getCommandHandler().getCommand(commandString);
         if (command == null) {
-            if (isPrivateMessage) e.respond("No such command.");
+            if (isPrivateMessage) {
+                e.respond("No such command.");
+            }
             return;
         }
         final IRCCommand.CommandType commandType = command.getCommandType();
@@ -122,9 +124,13 @@ public class BaseListeners extends ListenerAdapter<PircBotX> {
                         url = BotUtils.shortenURL(pastebin);
                     } catch (Exception ignored) {
                     }
-                    if (url != null) sb.append(" (").append(url).append(")");
+                    if (url != null) {
+                        sb.append(" (").append(url).append(")");
+                    }
                 }
-            } else ex.printStackTrace();
+            } else {
+                ex.printStackTrace();
+            }
             e.respond(sb.toString());
         }
     }

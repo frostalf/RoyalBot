@@ -1,5 +1,8 @@
 package org.royaldev.royalbot.commands;
 
+import java.io.StringReader;
+import java.net.URLEncoder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.royaldev.royalbot.BotUtils;
@@ -7,10 +10,6 @@ import org.royaldev.royalbot.RoyalBot;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
-import java.net.URLEncoder;
 
 public class WolframAlphaCommand implements IRCCommand {
 
@@ -45,8 +44,9 @@ public class WolframAlphaCommand implements IRCCommand {
         Element root = d.getDocumentElement();
         if (!root.hasAttribute("success") || !root.getAttribute("success").equalsIgnoreCase("true")) {
             StringBuilder sb = new StringBuilder("WolframAlpha returned with an error!");
-            if (!root.getAttribute("error").equalsIgnoreCase("false"))
+            if (!root.getAttribute("error").equalsIgnoreCase("false")) {
                 sb.append(" ").append(root.getAttribute("error"));
+            }
             event.respond(sb.toString());
             return;
         }

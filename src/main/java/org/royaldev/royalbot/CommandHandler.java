@@ -7,9 +7,9 @@ import org.royaldev.royalbot.commands.IRCCommand;
 
 public class CommandHandler {
 
-    private final Map<String, IRCCommand> commands = new TreeMap<String, IRCCommand>();
+    private final Map<String, IRCCommand> commands = new TreeMap<>();
     // Alias, Command
-    private final Map<String, String> aliasCommands = new TreeMap<String, String>();
+    private final Map<String, String> aliasCommands = new TreeMap<>();
 
     /**
      * Registers a command into the CommandHandler.
@@ -29,7 +29,9 @@ public class CommandHandler {
         }
         for (String alias : command.getAliases()) {
             synchronized (aliasCommands) {
-                if (aliasCommands.containsKey(alias)) continue;
+                if (aliasCommands.containsKey(alias)) {
+                    continue;
+                }
                 aliasCommands.put(alias, name);
             }
         }
@@ -45,10 +47,14 @@ public class CommandHandler {
     public void unregisterCommand(String name) {
         name = name.toLowerCase();
         synchronized (commands) {
-            if (commands.containsKey(name)) commands.remove(name);
+            if (commands.containsKey(name)) {
+                commands.remove(name);
+            }
         }
         synchronized (aliasCommands) {
-            if (aliasCommands.containsKey(name)) aliasCommands.remove(name);
+            if (aliasCommands.containsKey(name)) {
+                aliasCommands.remove(name);
+            }
         }
     }
 
@@ -61,9 +67,13 @@ public class CommandHandler {
     public IRCCommand getCommand(String name) {
         name = name.toLowerCase();
         synchronized (commands) {
-            if (commands.containsKey(name)) return commands.get(name);
+            if (commands.containsKey(name)) {
+                return commands.get(name);
+            }
             synchronized (aliasCommands) {
-                if (aliasCommands.containsKey(name)) return getCommand(aliasCommands.get(name));
+                if (aliasCommands.containsKey(name)) {
+                    return getCommand(aliasCommands.get(name));
+                }
             }
         }
         return null;

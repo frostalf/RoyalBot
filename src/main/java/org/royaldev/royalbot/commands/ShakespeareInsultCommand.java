@@ -1,9 +1,8 @@
 package org.royaldev.royalbot.commands;
 
+import java.util.Random;
 import org.apache.commons.lang3.StringUtils;
 import org.pircbotx.hooks.types.GenericMessageEvent;
-
-import java.util.Random;
 
 public class ShakespeareInsultCommand implements IRCCommand {
 
