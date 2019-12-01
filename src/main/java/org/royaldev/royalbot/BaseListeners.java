@@ -15,7 +15,7 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import org.royaldev.royalbot.auth.Auth;
 import org.royaldev.royalbot.commands.IRCCommand;
 
-public class BaseListeners extends ListenerAdapter<PircBotX> {
+public class BaseListeners extends ListenerAdapter {
 
     private final RoyalBot rb;
 

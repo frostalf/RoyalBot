@@ -11,7 +11,7 @@ public class AuthResponse {
     private boolean isAdmin = false;
     private String accountName = "";
 
-    protected AuthResponse(RoyalBot rb, NoticeEvent<?> event, User user) {
+    protected AuthResponse(RoyalBot rb, NoticeEvent event, User user) {
         if (!event.getUser().getNick().equals("NickServ")) {
             return;
         }

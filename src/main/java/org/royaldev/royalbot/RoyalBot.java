@@ -102,7 +102,7 @@ public class RoyalBot {
             System.exit(1);
         }
         addCommands();
-        final Configuration.Builder<PircBotX> cb = new Configuration.Builder<>();
+        final Configuration.Builder cb = new Configuration.Builder();
         cb.setServer(serverHostname, serverPort)
                 .setName(botNick)
                 .setRealName(botRealname)
@@ -194,7 +194,7 @@ public class RoyalBot {
         ch.registerCommand(new ShakespeareInsultCommand());
     }
 
-    private void addListeners(Configuration.Builder<PircBotX> cb) {
+    private void addListeners(Configuration.Builder cb) {
         cb.addListener(new YouTubeListener());
     }
 

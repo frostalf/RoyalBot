@@ -14,7 +14,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import org.royaldev.royalbot.BotUtils;
 import org.royaldev.royalbot.RoyalBot;
 
-public class YouTubeListener extends ListenerAdapter<PircBotX> {
+public class YouTubeListener extends ListenerAdapter {
 
     private final Pattern p = Pattern.compile("https?://(www\\.)?youtube\\.com/watch\\?v=([\\w\\-]+)");
     private final ObjectMapper om = new ObjectMapper();
